@@ -190,7 +190,7 @@ void Data::draw_beam()
     }
     TH2F *hDummy = new TH2F("hDummy","Beam Trigger", 250, 0, 245, 100, -1.0, 32.0);
     hDummy->Draw();
-    hDummy->GetXaxis()->SetTitle("x 0.94 #mus");
+    hDummy->GetXaxis()->SetTitle("x 0.094 #mus");
     hDummy->GetYaxis()->SetTitle("PMT ID");
     for (int i=0; i<NPMT; i++) {
         TH1F *h = (TH1F*)wfs_beam[i]->Clone();
