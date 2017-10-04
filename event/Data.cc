@@ -198,7 +198,7 @@ void Data::draw_beam()
         h->Add(hc, i*10);
         h->Scale(1./10);
         // h->SetLineColor(kGray+1);
-        h->Draw("same");
+        h->Draw("HIST, same");
     }
 }
 
