@@ -197,7 +197,7 @@ void Data::draw_beam()
         h->SetName(TString::Format("hdecon_clone_%i", i));
         h->Add(hc, i*10);
         h->Scale(1./10);
-        h->SetLineColor(kGray+1);
+        // h->SetLineColor(kGray+1);
         h->Draw("same");
     }
 }
