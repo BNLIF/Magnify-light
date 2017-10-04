@@ -6,6 +6,7 @@ class TTree;
 class TH1F;
 class TFile;
 class TEllipse;
+class TBox;
 
 #include <vector>
 
@@ -48,9 +49,11 @@ public:
     void draw_cosmic();
     void draw_pmts();
     void draw_flash();
+    void draw_time();
 
 private:
     std::vector<TEllipse*> list_of_els;
+    std::vector<TBox*> list_of_boxes;
 
     void load_runinfo();
     void load_location();

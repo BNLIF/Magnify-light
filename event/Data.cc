@@ -7,6 +7,8 @@
 #include "TClonesArray.h"
 #include "TEllipse.h"
 #include "TMath.h"
+#include "TLine.h"
+#include "TBox.h"
 
 #include <vector>
 #include <string>
@@ -168,7 +170,9 @@ void Data::load_flash(int i)
 
 void Data::print_flash()
 {
-    cout << "flash #" << current_flash << endl;
+    cout << "flash #" << current_flash
+    << ", @" << time << " (" << low_time << ", " << high_time << ")"
+    << endl;
     cout << "PE: ";
     for (int i = 0; i < NPMT; ++i) {
         cout << PE[i] << " ";
@@ -193,7 +197,7 @@ void Data::draw_beam()
         h->SetName(TString::Format("hdecon_clone_%i", i));
         h->Add(hc, i*10);
         h->Scale(1./10);
-        // h->SetLineColor(kRed+1);
+        h->SetLineColor(kGray+1);
         h->Draw("same");
     }
 }
@@ -223,7 +227,7 @@ void Data::draw_cosmic()
 
 void Data::draw_pmts()
 {
-    TH2F *hBoundary = new TH2F("hBoundary","", 100, 0, 1040, 100, -116, 116);
+    TH2F *hBoundary = new TH2F("hBoundary", "PMT Hit Map", 100, 0, 1040, 100, -116, 116);
     hBoundary->Draw();
     hBoundary->GetXaxis()->SetTitle("z [mm]");
     hBoundary->GetYaxis()->SetTitle("y [mm]");
@@ -252,6 +256,27 @@ void Data::draw_flash()
         // el->SetLineColor(kRed);
         el->Draw();
     }
+
+}
+
+void Data::draw_time()
+{
+    int size = list_of_boxes.size();
+    for (int i=0; i<size; i++) {
+        list_of_boxes[i]->Delete();
+    }
+    list_of_boxes.clear();
+
+    for (int i=0; i<NPMT; i++) {
+        if (PE[i]<0.1) continue;
+        TBox *box = new TBox(low_time, i, high_time, i+1);
+        list_of_boxes.push_back(box);
+
+        box->SetFillColor(kRed);
+        // box->SetLineColor(kRed);
+        box->Draw();
+    }
+
 }
 
 void Data::printinfo()
