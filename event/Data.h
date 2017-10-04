@@ -51,6 +51,9 @@ public:
     void draw_flash();
     void draw_time();
 
+    void print_flash();
+    void printinfo();
+
 private:
     std::vector<TEllipse*> list_of_els;
     std::vector<TBox*> list_of_boxes;
@@ -61,8 +64,7 @@ private:
     void load_cosmic();
     void load_flash_tree();
 
-    void print_flash();
-    void printinfo();
+
 
 };
 
