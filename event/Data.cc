@@ -229,8 +229,8 @@ void Data::draw_pmts()
 {
     TH2F *hBoundary = new TH2F("hBoundary", "PMT Hit Map", 100, 0, 1040, 100, -116, 116);
     hBoundary->Draw();
-    hBoundary->GetXaxis()->SetTitle("z [mm]");
-    hBoundary->GetYaxis()->SetTitle("y [mm]");
+    hBoundary->GetXaxis()->SetTitle("z [cm]");
+    hBoundary->GetYaxis()->SetTitle("y [cm]");
     for (int i=0; i<NPMT; i++) {
         TEllipse *el = new TEllipse(pmt_z[i], pmt_y[i], 10.);
         el->Draw();
