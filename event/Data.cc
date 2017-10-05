@@ -292,7 +292,8 @@ void Data::draw_flash()
     }
     TH1F *h = (TH1F*)gDirectory->FindObject("hBoundary");
     if (h) {
-        h->SetTitle(TString::Format("PMT Hit Map (Flash #%d)", current_flash));
+        h->SetTitle(TString::Format("PMT Hit Map (Flash #%d, %.1f PE @%.1f #mus)",
+            current_flash, total_PE, time));
     }
 }
 
