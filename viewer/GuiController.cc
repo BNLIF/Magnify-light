@@ -77,7 +77,7 @@ GuiController::~GuiController()
 
 void GuiController::InitConnections()
 {
-    // mw->fMenuFile->Connect("Activated(int)", "GuiController", this, "HandleMenu(int)");
+    mw->fMenuFile->Connect("Activated(int)", "GuiController", this, "HandleMenu(int)");
 
     cw->flashEntry->SetLimitValues(0, data->nFlash-1);
     cw->flashEntry->Connect("ValueSet(Long_t)", "GuiController", this, "FlashChanged()");
@@ -130,6 +130,16 @@ void GuiController::UpdateShowAllFlashes()
 
     vw->can->GetPad(2)->Modified();
     vw->can->GetPad(2)->Update();
+}
+
+void GuiController::HandleMenu(int id)
+{
+    // const char *filetypes[] = {"ROOT files", "*.root", 0, 0};
+    switch (id) {
+        case M_FILE_EXIT:
+            gApplication->Terminate(0);
+            break;
+    }
 }
 
 TString GuiController::OpenDialog()
