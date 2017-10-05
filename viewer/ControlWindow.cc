@@ -25,13 +25,15 @@ ControlWindow::ControlWindow(const TGWindow *p, int w, int h)
         1, 10);
     group_general->AddFrame(flashEntry, new TGLayoutHints(kLHintsTop | kLHintsLeft,  1, 1, 1, 1));
 
+    allFlashButton = new TGCheckButton(group_general, "all flashes  ");
+    allFlashButton->SetState(kButtonUp);
+    group_general->AddFrame(allFlashButton, new TGLayoutHints(kLHintsTop | kLHintsLeft,  1, 1, 1, 1));
+
     // rawWfButton = new TGCheckButton(group_general, "raw waveform  ");
     // rawWfButton->SetState(kButtonUp);
     // group_general->AddFrame(rawWfButton, new TGLayoutHints(kLHintsTop | kLHintsLeft,  1, 1, 1, 1));
 
-    // badChanelButton = new TGCheckButton(group_general, "bad channel  ");
-    // badChanelButton->SetState(kButtonUp);
-    // group_general->AddFrame(badChanelButton, new TGLayoutHints(kLHintsTop | kLHintsLeft,  1, 1, 1, 1));
+
 
     // setThreshButton = new TGTextButton(group_general, "ch. thresh. x");
     // group_general->AddFrame(setThreshButton, new TGLayoutHints(kLHintsTop | kLHintsLeft, 3, 2, 2, 2));

@@ -210,7 +210,7 @@ void Data::draw_cosmic()
     for (int i=0; i<nBins; i++) {
         hc->SetBinContent(i, 1);
     }
-    TH2F *hDummy = new TH2F("hDummy_cosmic","Cosmic Trigger", 8000, -3200, 4800, 32, 0, 32);
+    TH2F *hDummy = new TH2F("hAllCosmic","Cosmic Trigger", 8000, -3200, 4800, 32, 0, 32);
     hDummy->Draw();
     hDummy->GetXaxis()->SetTitle("#mus");
     hDummy->GetYaxis()->SetTitle("PMT ID");

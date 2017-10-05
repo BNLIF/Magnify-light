@@ -9,6 +9,7 @@
 #include "TExec.h"
 #include "TROOT.h"
 #include "TMath.h"
+#include "TTree.h"
 #include "TGFileDialog.h"
 
 #include "TGMenu.h"
@@ -75,6 +76,7 @@ void GuiController::InitConnections()
 
     cw->flashEntry->SetLimitValues(0, data->nFlash-1);
     cw->flashEntry->Connect("ValueSet(Long_t)", "GuiController", this, "FlashChanged()");
+    cw->allFlashButton->Connect("Clicked()", "GuiController", this, "UpdateShowAllFlashes()");
 
     // vw->can->Connect(
     //     "ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
@@ -102,6 +104,28 @@ void GuiController::FlashChanged()
 
 }
 
+void GuiController::UpdateShowAllFlashes()
+{
+    vw->can->cd(2);
+
+    if (cw->allFlashButton->IsDown()) {
+        // cout << "show all flashes" << endl;
+        vw->SetPalette(1);
+        data->T_flash->Draw("Iteration$:time>>hAllflashes(8000,-3200,4800,32,0,32)","PE>0.1","same,colz");
+        TH1F *h = (TH1F*)gDirectory->FindObject("hAllflashes");
+        if (h) {
+            h->GetZaxis()->SetLabelSize(0);
+        }
+    }
+    else {
+        vw->SetPalette(4);
+        TH1F *h = (TH1F*)gDirectory->FindObject("hAllflashes");
+        if (h) delete h;
+    }
+
+    vw->can->GetPad(2)->Modified();
+    vw->can->GetPad(2)->Update();
+}
 
 TString GuiController::OpenDialog()
 {
