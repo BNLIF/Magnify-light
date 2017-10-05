@@ -7,6 +7,7 @@ class TH1F;
 class TFile;
 class TEllipse;
 class TBox;
+class TClonesArray;
 
 #include <vector>
 
@@ -22,6 +23,7 @@ public:
     TTree *T_flash;
 
     int NPMT;
+    double CONV;
     int runNo;
     int subRunNo;
     int eventNo;
@@ -29,10 +31,18 @@ public:
     double beamtrigger_rel_time;
 
     std::vector<TH1F*> wfs_beam;
+    std::vector<TH1F*> wfs_beam_raw;
     std::vector<TH1F*> wfs_cosmic;
     std::vector<float> pmt_x;
     std::vector<float> pmt_y;
     std::vector<float> pmt_z;
+
+    TClonesArray* op_wf;
+    std::vector<int> *op_femch;
+    std::vector<double> *op_timestamp;
+    std::vector<double> *op_gain;
+    std::vector<double> *op_gainerror;
+    double triggerTime;
 
     int current_flash;
     int current_beam_wf;

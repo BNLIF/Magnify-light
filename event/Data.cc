@@ -10,6 +10,7 @@
 #include "TLine.h"
 #include "TBox.h"
 #include "TEntryList.h"
+#include "TPad.h"
 
 #include <vector>
 #include <string>
@@ -26,6 +27,7 @@ Data::Data(const char* filename)
 {
     NPMT = 32;
     current_beam_wf = 0;
+    CONV = 15.625*6*1e-3;
 
     rootFile = TFile::Open(filename);
     if (!rootFile) {
@@ -36,8 +38,8 @@ Data::Data(const char* filename)
 
     load_runinfo();
     load_location();
-    load_beam();
     load_cosmic();
+    load_beam();
     load_flash_tree();
     load_flash(0);
     printinfo();
@@ -90,20 +92,35 @@ void Data::load_beam()
     TH2F* h2 = dynamic_cast<TH2F*>(rootFile->Get("hdecon"));
     for (int i=0; i<NPMT; i++) {
         TString name = TString::Format("hdecon_%i", i);
-        h2->ProjectionX(name.Data(), i+1, i+1);
-        TH1F *h = (TH1F*)gDirectory->FindObject(name);
+        TH1F *h = new TH1F(name, name, 250, 0, 250*CONV);
+        for (int j=0; j<250; j++) {
+            h->SetBinContent(j, h2->GetBinContent(j+1, i+1));
+        }
+        // h2->ProjectionX(name.Data(), i+1, i+1);
+        // TH1F *h = (TH1F*)gDirectory->FindObject(name);
         wfs_beam.push_back(h);
+    }
+
+    TH2F* h3 = dynamic_cast<TH2F*>(rootFile->Get("hraw"));
+    for (int i=0; i<NPMT; i++) {
+        TString name = TString::Format("hraw_%i", i);
+        TH1F *h = new TH1F(name, name, 1500, 0, 1500*CONV/6);
+        for (int j=0; j<1500; j++) {
+            h->SetBinContent(j, h3->GetBinContent(j+1, i+1));
+        }
+        h->Scale(5./op_gain->at(i));
+        wfs_beam_raw.push_back(h);
     }
 }
 
+
 void Data::load_cosmic()
 {
-    TClonesArray* op_wf = new TClonesArray;
-    std::vector<int> *op_femch = new std::vector<int>;
-    std::vector<double> *op_timestamp = new std::vector<double>;
-    std::vector<double> *op_gain = new std::vector<double>;
-    std::vector<double> *op_gainerror = new std::vector<double>;
-    double triggerTime;
+    op_wf = new TClonesArray;
+    op_femch = new std::vector<int>;
+    op_timestamp = new std::vector<double>;
+    op_gain = new std::vector<double>;
+    op_gainerror = new std::vector<double>;
 
     T_data->SetBranchAddress("op_femch",&op_femch);
     T_data->SetBranchAddress("op_gain",&op_gain);
@@ -193,9 +210,9 @@ void Data::draw_beam()
     for (int i=1; i<=nBins; i++) {
         hc->SetBinContent(i, 1);
     }
-    TH2F *hDummy = new TH2F("hDummy","Beam Trigger", 250, 0, 250, 100, -1.0, 32.0);
+    TH2F *hDummy = new TH2F("hDummy","Beam Trigger", 250, 0, 250*CONV, 100, -1.0, 32.0);
     hDummy->Draw();
-    hDummy->GetXaxis()->SetTitle("x 0.094 #mus");
+    hDummy->GetXaxis()->SetTitle("#mus");
     hDummy->GetYaxis()->SetTitle("PMT ID");
     for (int i=0; i<NPMT; i++) {
         TH1F *h = (TH1F*)wfs_beam[i]->Clone();
@@ -212,16 +229,15 @@ void Data::draw_beam_flashes()
     T_flash->Draw(">>beamFlashList","type==2","entrylist");
     TEntryList *list = (TEntryList*)gDirectory->FindObject("beamFlashList");
     int nBeamFlash = list->GetN();
-    const double CONV = 15.625*6*1e-3;
-    const double offset = -beamtrigger_rel_time/CONV;
+    const double offset = -beamtrigger_rel_time;
     for (int i=0; i<nBeamFlash; i++) {
         load_flash(list->GetEntry(i));
-        TBox *box = new TBox(low_time/CONV+offset, 0, high_time/CONV+offset, 31);
+        TBox *box = new TBox(low_time+offset, 0, high_time+offset, 31);
         box->SetFillColor(kRed);
         box->SetFillStyle(3003);
         box->Draw();
 
-        TLine *l = new TLine(time/CONV+offset, 0, time/CONV+offset, TMath::Log10(total_PE));
+        TLine *l = new TLine(time+offset, 0, time+offset, TMath::Log10(total_PE));
         // cout << time << " " << high_time << endl;
         l->SetLineColor(kRed);
         l->SetLineWidth(2);
@@ -256,8 +272,15 @@ void Data::draw_beam_wf()
     TH1F *h = wfs_beam[current_beam_wf];
     h->Draw("HIST");
     h->SetTitle(TString::Format("PMT %d", current_beam_wf));
-    h->GetXaxis()->SetTitle("x 0.094 #mus");
-    h->GetYaxis()->SetTitle("ADC");
+    h->GetXaxis()->SetTitle("#mus");
+    h->GetYaxis()->SetTitle("PE");
+
+    TH1F *h2 = wfs_beam_raw[current_beam_wf];
+    h2->Draw("HIST,same");
+    h2->SetLineColor(kBlue);
+
+    gPad->SetGridx();
+    gPad->SetGridy();
 }
 
 void Data::draw_cosmic()
