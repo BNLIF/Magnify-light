@@ -214,18 +214,24 @@ void Data::draw_beam_flashes()
     const double offset = -beamtrigger_rel_time/CONV;
     for (int i=0; i<nBeamFlash; i++) {
         load_flash(list->GetEntry(i));
-        cout << time << endl;
         TBox *box = new TBox(low_time/CONV+offset, 0, high_time/CONV+offset, 31);
         box->SetFillColor(kRed);
         box->SetFillStyle(3003);
         box->Draw();
+
+        TLine *l = new TLine(time/CONV+offset, 0, time/CONV+offset, TMath::Log10(total_PE));
+        // cout << time << " " << high_time << endl;
+        l->SetLineColor(kRed);
+        l->SetLineWidth(2);
+        l->Draw();
+
         int l1size = l1_fired_time->size();
         for (int j=0; j<l1size; j++) {
             double l1time = l1_fired_time->at(j);
-            TLine *l = new TLine(l1time/CONV+offset, 0, l1time/CONV+offset, TMath::Log10(l1_fired_pe->at(j)) );
-            l->SetLineColor(kBlue);
-            l->SetLineWidth(2);
-            l->Draw();
+            TLine *l1 = new TLine(l1time/CONV+offset, 32-TMath::Log10(l1_fired_pe->at(j)), l1time/CONV+offset, 32);
+            l1->SetLineColor(kBlue);
+            l1->SetLineWidth(2);
+            l1->Draw();
         }
     }
 }
