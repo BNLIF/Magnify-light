@@ -9,6 +9,7 @@
 #include "TMath.h"
 #include "TLine.h"
 #include "TBox.h"
+#include "TEntryList.h"
 
 #include <vector>
 #include <string>
@@ -111,6 +112,8 @@ void Data::load_cosmic()
 
     T_data->GetEntry(0);
     int NTrigger = op_femch->size();
+    beamtrigger_rel_time = op_timestamp->at(0) - triggerTime;
+
     cout << "#triggers: " << NTrigger << endl;
     cout << "#gains: " << op_gain->size() << endl;
     // cout << op_wf->GetEntries() << endl;
@@ -188,7 +191,7 @@ void Data::draw_beam()
     for (int i=0; i<nBins; i++) {
         hc->SetBinContent(i, 1);
     }
-    TH2F *hDummy = new TH2F("hDummy","Beam Trigger", 250, 0, 245, 100, -1.0, 32.0);
+    TH2F *hDummy = new TH2F("hDummy","Beam Trigger", 250, 0, 250, 100, -1.0, 32.0);
     hDummy->Draw();
     hDummy->GetXaxis()->SetTitle("x 0.094 #mus");
     hDummy->GetYaxis()->SetTitle("PMT ID");
@@ -199,6 +202,31 @@ void Data::draw_beam()
         h->Scale(1./10);
         // h->SetLineColor(kGray+1);
         h->Draw("HIST, same");
+    }
+}
+
+void Data::draw_beam_flashes()
+{
+    T_flash->Draw(">>beamFlashList","type==2","entrylist");
+    TEntryList *list = (TEntryList*)gDirectory->FindObject("beamFlashList");
+    int nBeamFlash = list->GetN();
+    const double CONV = 15.625*6*1e-3;
+    const double offset = -beamtrigger_rel_time/CONV;
+    for (int i=0; i<nBeamFlash; i++) {
+        load_flash(list->GetEntry(i));
+        cout << time << endl;
+        TBox *box = new TBox(low_time/CONV+offset, 0, high_time/CONV+offset, 31);
+        box->SetFillColor(kRed);
+        box->SetFillStyle(3003);
+        box->Draw();
+        int l1size = l1_fired_time->size();
+        for (int j=0; j<l1size; j++) {
+            double l1time = l1_fired_time->at(j);
+            TLine *l = new TLine(l1time/CONV+offset, 0, l1time/CONV+offset, TMath::Log10(l1_fired_pe->at(j)) );
+            l->SetLineColor(kBlue);
+            l->SetLineWidth(2);
+            l->Draw();
+        }
     }
 }
 
@@ -256,7 +284,10 @@ void Data::draw_flash()
         // el->SetLineColor(kRed);
         el->Draw();
     }
-
+    TH1F *h = (TH1F*)gDirectory->FindObject("hBoundary");
+    if (h) {
+        h->SetTitle(TString::Format("PMT Hit Map (Flash #%d)", current_flash));
+    }
 }
 
 void Data::draw_time()
@@ -276,7 +307,16 @@ void Data::draw_time()
         // box->SetLineColor(kRed);
         box->Draw();
     }
+}
 
+void Data::draw_totalPE_vs_time()
+{
+    T_flash->Draw("time>>hPET(8000,-3200,4800)","total_PE*(total_PE>1)");
+    TH1F *h = (TH1F*)gDirectory->FindObject("hPET");
+    h->SetTitle(TString::Format("Total PE per flash (%d flashes)", nFlash));
+    h->GetXaxis()->SetTitle("#mus");
+    // h->GetYaxis()->SetTitle("#SigmaPE");
+    h->Draw();
 }
 
 void Data::printinfo()

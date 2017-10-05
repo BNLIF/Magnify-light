@@ -26,6 +26,7 @@ public:
     int subRunNo;
     int eventNo;
     int nFlash;
+    double beamtrigger_rel_time;
 
     std::vector<TH1F*> wfs_beam;
     std::vector<TH1F*> wfs_cosmic;
@@ -46,10 +47,12 @@ public:
     void load_flash(int i=0);
 
     void draw_beam();
+    void draw_beam_flashes();
     void draw_cosmic();
     void draw_pmts();
     void draw_flash();
     void draw_time();
+    void draw_totalPE_vs_time();
 
     void print_flash();
     void printinfo();

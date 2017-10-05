@@ -53,10 +53,15 @@ GuiController::GuiController(const TGWindow *p, int w, int h, const char* fn)
 
     vw->can->cd(1);
     data->draw_beam();
+    data->draw_beam_flashes();
+
 
     vw->can->cd(2);
     data->draw_cosmic();
     gPad->SetLogz();
+
+    vw->can->cd(3);
+    data->draw_totalPE_vs_time();
 
     vw->can->cd(4);
     data->draw_pmts();
