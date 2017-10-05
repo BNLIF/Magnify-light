@@ -188,7 +188,7 @@ void Data::draw_beam()
     TH1F *hc = (TH1F*) wfs_beam[0]->Clone();
     hc->Reset();
     int nBins = hc->GetNbinsX();
-    for (int i=0; i<nBins; i++) {
+    for (int i=1; i<=nBins; i++) {
         hc->SetBinContent(i, 1);
     }
     TH2F *hDummy = new TH2F("hDummy","Beam Trigger", 250, 0, 250, 100, -1.0, 32.0);
