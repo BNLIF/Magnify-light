@@ -25,6 +25,8 @@ Data::Data()
 Data::Data(const char* filename)
 {
     NPMT = 32;
+    current_beam_wf = 0;
+
     rootFile = TFile::Open(filename);
     if (!rootFile) {
         string msg = "Unable to open ";
@@ -234,6 +236,28 @@ void Data::draw_beam_flashes()
             l1->Draw();
         }
     }
+}
+
+void Data::set_current_beam_wf(double y)
+{
+    if (y<-0.5) {
+        current_beam_wf = 0;
+    }
+    else if (y>31.5) {
+        current_beam_wf = 31;
+    }
+    else {
+        current_beam_wf = int(y);
+    }
+}
+
+void Data::draw_beam_wf()
+{
+    TH1F *h = wfs_beam[current_beam_wf];
+    h->Draw("HIST");
+    h->SetTitle(TString::Format("PMT %d", current_beam_wf));
+    h->GetXaxis()->SetTitle("x 0.094 #mus");
+    h->GetYaxis()->SetTitle("ADC");
 }
 
 void Data::draw_cosmic()

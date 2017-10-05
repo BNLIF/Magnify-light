@@ -35,6 +35,7 @@ public:
     std::vector<float> pmt_z;
 
     int current_flash;
+    int current_beam_wf;
     int type;
     double low_time, high_time;
     double time;
@@ -44,10 +45,13 @@ public:
     std::vector<double> *l1_fired_time;
     std::vector<double> *l1_fired_pe;
 
+    void set_current_beam_wf(double y);
+
     void load_flash(int i=0);
 
     void draw_beam();
     void draw_beam_flashes();
+    void draw_beam_wf();
     void draw_cosmic();
     void draw_pmts();
     void draw_flash();

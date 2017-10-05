@@ -83,12 +83,12 @@ void GuiController::InitConnections()
     cw->flashEntry->Connect("ValueSet(Long_t)", "GuiController", this, "FlashChanged()");
     cw->allFlashButton->Connect("Clicked()", "GuiController", this, "UpdateShowAllFlashes()");
 
-    // vw->can->Connect(
-    //     "ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
-    //     "GuiController",
-    //     this,
-    //     "ProcessCanvasEvent(Int_t,Int_t,Int_t,TObject*)"
-    // );
+    vw->can->Connect(
+        "ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
+        "GuiController",
+        this,
+        "ProcessCanvasEvent(Int_t,Int_t,Int_t,TObject*)"
+    );
 }
 
 void GuiController::FlashChanged()
@@ -130,6 +130,29 @@ void GuiController::UpdateShowAllFlashes()
 
     vw->can->GetPad(2)->Modified();
     vw->can->GetPad(2)->Update();
+}
+
+void GuiController::ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *selected)
+{
+    if (ev == 11) { // clicked
+        // if (!(selected->IsA() == TH2F::Class()
+        //     || selected->IsA() == TBox::Class()
+        //     || selected->IsA() == TLine::Class()
+        // )) return;
+        TVirtualPad* pad = vw->can->GetClickSelectedPad();
+        int padNo = pad->GetNumber();
+        double xx = pad->AbsPixeltoX(x);
+        double yy = pad->AbsPixeltoY(y);
+        cout << "pad " << padNo << ": (" << xx << ", " << yy << ")" << endl;
+        if (padNo == 1) {
+            vw->can->cd(3);
+            data->set_current_beam_wf(yy);
+            data->draw_beam_wf();
+            vw->can->GetPad(3)->Modified();
+            vw->can->GetPad(3)->Update();
+        }
+    }
+
 }
 
 void GuiController::HandleMenu(int id)

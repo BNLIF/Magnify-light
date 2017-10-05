@@ -24,7 +24,7 @@ public:
     void UpdateShowAllFlashes();
 
     void HandleMenu(int id);
-    // void ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *selected);
+    void ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *selected);
 
 
     TString OpenDialog();
