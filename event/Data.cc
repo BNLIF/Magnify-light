@@ -89,16 +89,26 @@ void Data::load_location()
 
 void Data::load_beam()
 {
-    TH2F* h2 = dynamic_cast<TH2F*>(rootFile->Get("hdecon"));
+    TH2F* h1 = dynamic_cast<TH2F*>(rootFile->Get("hdecon"));
     for (int i=0; i<NPMT; i++) {
         TString name = TString::Format("hdecon_%i", i);
         TH1F *h = new TH1F(name, name, 250, 0, 250*CONV);
         for (int j=0; j<250; j++) {
-            h->SetBinContent(j, h2->GetBinContent(j+1, i+1));
+            h->SetBinContent(j, h1->GetBinContent(j+1, i+1));
         }
         // h2->ProjectionX(name.Data(), i+1, i+1);
         // TH1F *h = (TH1F*)gDirectory->FindObject(name);
         wfs_beam.push_back(h);
+    }
+
+    TH2F* h2 = dynamic_cast<TH2F*>(rootFile->Get("hl1"));
+    for (int i=0; i<NPMT; i++) {
+        TString name = TString::Format("hl1_%i", i);
+        TH1F *h = new TH1F(name, name, 250, 0, 250*CONV);
+        for (int j=0; j<250; j++) {
+            h->SetBinContent(j, h2->GetBinContent(j+1, i+1));
+        }
+        wfs_beam_l1.push_back(h);
     }
 
     TH2F* h3 = dynamic_cast<TH2F*>(rootFile->Get("hraw"));
@@ -274,6 +284,10 @@ void Data::draw_beam_wf()
     h->SetTitle(TString::Format("PMT %d", current_beam_wf));
     h->GetXaxis()->SetTitle("#mus");
     h->GetYaxis()->SetTitle("PE");
+
+    TH1F *hl1 = wfs_beam_l1[current_beam_wf];
+    hl1->Draw("HIST,same");
+    hl1->SetLineColor(kMagenta);
 
     TH1F *h2 = wfs_beam_raw[current_beam_wf];
     h2->Draw("HIST,same");

@@ -32,6 +32,7 @@ public:
 
     std::vector<TH1F*> wfs_beam;
     std::vector<TH1F*> wfs_beam_raw;
+    std::vector<TH1F*> wfs_beam_l1;
     std::vector<TH1F*> wfs_cosmic;
     std::vector<float> pmt_x;
     std::vector<float> pmt_y;
