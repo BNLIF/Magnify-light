@@ -63,6 +63,8 @@ public:
     void draw_beam();
     void draw_beam_flashes();
     void draw_beam_wf();
+    void draw_beam_wf_raw(bool draw);
+    void draw_beam_wf_l1(bool draw);
     void draw_cosmic();
     void draw_pmts();
     void draw_flash();

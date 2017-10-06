@@ -17,17 +17,8 @@ public:
     TGCheckButton *allFlashButton;
 
     TGNumberEntry *beamWfEntry;
-
-    // TGNumberEntry *threshEntry[3];
-    // TGNumberEntry *zAxisRangeEntry[2];
-    // TGNumberEntry *timeRangeEntry[2];
-    // TGNumberEntry *adcRangeEntry[2];
-    // TGCheckButton *timeModeButton;
-
-    // TGCheckButton *rawWfButton;
-    // TGTextButton  *unZoomButton;
-    // TGTextButton  *setThreshButton;
-    // TGNumberEntry *threshScaleEntry;
+    TGCheckButton *beamRawWfButton;
+    TGCheckButton *beamL1WfButton;
 
     ClassDef(ControlWindow, 0)
 };

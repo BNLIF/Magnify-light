@@ -27,14 +27,12 @@ public:
     void HandleMenu(int id);
     void ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *selected);
 
-
     TString OpenDialog();
 
     MainWindow *mw;
     ViewWindow *vw;
     ControlWindow *cw;
     Data *data;
-    // TH1F *hCurrent[3];
 };
 
 #endif

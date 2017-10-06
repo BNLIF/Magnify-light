@@ -256,7 +256,7 @@ void Data::draw_beam_flashes()
         int l1size = l1_fired_time->size();
         for (int j=0; j<l1size; j++) {
             double l1time = l1_fired_time->at(j);
-            TLine *l1 = new TLine(l1time/CONV+offset, 32-TMath::Log10(l1_fired_pe->at(j)), l1time/CONV+offset, 32);
+            TLine *l1 = new TLine(l1time+offset, 32-TMath::Log10(l1_fired_pe->at(j)), l1time+offset, 32);
             l1->SetLineColor(kBlue);
             l1->SetLineWidth(2);
             l1->Draw();
@@ -285,16 +285,36 @@ void Data::draw_beam_wf()
     h->GetXaxis()->SetTitle("#mus");
     h->GetYaxis()->SetTitle("PE");
 
-    TH1F *hl1 = wfs_beam_l1[current_beam_wf];
-    hl1->Draw("HIST,same");
-    hl1->SetLineColor(kMagenta);
-
-    TH1F *h2 = wfs_beam_raw[current_beam_wf];
-    h2->Draw("HIST,same");
-    h2->SetLineColor(kBlue);
+    // TH1F *hl1 = wfs_beam_l1[current_beam_wf];
+    // hl1->Draw("HIST,same");
+    // hl1->SetLineColor(kMagenta);
 
     gPad->SetGridx();
     gPad->SetGridy();
+}
+
+void Data::draw_beam_wf_raw(bool draw)
+{
+    TH1F *h = wfs_beam_raw[current_beam_wf];
+    if (draw) {
+        h->Draw("HIST,same");
+        h->SetLineColor(kBlue);
+    }
+    else {
+        gPad->GetListOfPrimitives()->Remove(h);
+    }
+}
+
+void Data::draw_beam_wf_l1(bool draw)
+{
+    TH1F *h = wfs_beam_l1[current_beam_wf];
+    if (draw) {
+        h->Draw("HIST,same");
+        h->SetLineColor(kMagenta);
+    }
+    else {
+        gPad->GetListOfPrimitives()->Remove(h);
+    }
 }
 
 void Data::draw_cosmic()

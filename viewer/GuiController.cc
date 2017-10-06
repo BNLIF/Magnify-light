@@ -83,6 +83,8 @@ void GuiController::InitConnections()
     cw->flashEntry->Connect("ValueSet(Long_t)", "GuiController", this, "FlashChanged()");
     cw->allFlashButton->Connect("Clicked()", "GuiController", this, "UpdateShowAllFlashes()");
     cw->beamWfEntry->Connect("ValueSet(Long_t)", "GuiController", this, "BeamWfChanged()");
+    cw->beamRawWfButton->Connect("Clicked()", "GuiController", this, "BeamWfChanged()");
+    cw->beamL1WfButton->Connect("Clicked()", "GuiController", this, "BeamWfChanged()");
 
     vw->can->Connect(
         "ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
@@ -139,6 +141,8 @@ void GuiController::BeamWfChanged()
     vw->can->cd(3);
     data->set_current_beam_wf(id);
     data->draw_beam_wf();
+    data->draw_beam_wf_l1(cw->beamL1WfButton->IsDown());
+    data->draw_beam_wf_raw(cw->beamRawWfButton->IsDown());
     vw->can->GetPad(3)->Modified();
     vw->can->GetPad(3)->Update();
 }
@@ -156,12 +160,9 @@ void GuiController::ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *sele
         double yy = pad->AbsPixeltoY(y);
         cout << "pad " << padNo << ": (" << xx << ", " << yy << ")" << endl;
         if (padNo == 1) {
-            vw->can->cd(3);
             data->set_current_beam_wf(yy);
-            data->draw_beam_wf();
-            vw->can->GetPad(3)->Modified();
-            vw->can->GetPad(3)->Update();
             cw->beamWfEntry->SetNumber(data->current_beam_wf);
+            BeamWfChanged();
         }
     }
 
