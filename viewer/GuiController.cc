@@ -167,6 +167,10 @@ void GuiController::ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *sele
             cw->beamWfEntry->SetNumber(data->current_beam_wf);
             BeamWfChanged();
         }
+        else if (padNo == 3) {
+            cw->flashEntry->SetNumber(data->FindFlash(xx));
+            FlashChanged();
+        }
     }
 
 }

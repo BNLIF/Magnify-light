@@ -29,6 +29,7 @@ public:
     int eventNo;
     int nFlash;
     double beamtrigger_rel_time;
+    vector<pair<double,int> >  list_time_entry;
 
     std::vector<TH1F*> wfs_beam;
     std::vector<TH1F*> wfs_beam_raw;
@@ -73,6 +74,8 @@ public:
 
     void print_flash();
     void printinfo();
+
+    int FindFlash(double t);
 
 private:
     std::vector<TEllipse*> list_of_els;

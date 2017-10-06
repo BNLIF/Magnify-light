@@ -11,12 +11,16 @@
 #include "TBox.h"
 #include "TEntryList.h"
 #include "TPad.h"
+#include "TROOT.h"
+#include "TCanvas.h"
 
 #include <vector>
 #include <string>
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
+#include <utility>
+#include <algorithm>
 
 using namespace std;
 
@@ -192,7 +196,47 @@ void Data::load_flash_tree()
     T_flash->SetBranchAddress("l1_fired_pe",&l1_fired_pe);
 
     nFlash = T_flash->GetEntries();
+
+    // sort time
+    // gROOT->SetBatch(kFALSE);
+    // TCanvas c1;
+    T_flash->Draw("time:Entry$","","goff");
+    double* v1 = T_flash->GetV1();
+    double* v2 = T_flash->GetV2();
+    for (int i=0; i<nFlash; i++) {
+        list_time_entry.push_back(make_pair(v1[i], v2[i]));
+    }
+    sort(list_time_entry.begin(), list_time_entry.end());
+    cout << list_time_entry[0].first << " " << list_time_entry[0].second << endl;
+    // vector_di::iterator it = lower_bound(list_time_entry.begin(), list_time_entry.end(), 0);
+    // if (it != list_time_entry.end()) {
+    //     cout << (*it).first << " " << (*it).second << endl;
+    // }
 }
+
+int Data::FindFlash(double t)
+{
+    // find the closest flash to timme t
+    for (int i=0; i<nFlash; i++) {
+        double thisT = list_time_entry[i].first;
+        if (t<thisT) {
+            if (i==0) {
+                return list_time_entry[0].second;
+            }
+            else {
+                double prevT = list_time_entry[i-1].first;
+                if ((thisT-t) < (t-prevT)) {
+                    return list_time_entry[i].second;
+                }
+                else {
+                    return list_time_entry[i-1].second;
+                }
+            }
+        }
+    }
+    return list_time_entry[nFlash-1].second;
+}
+
 
 void Data::load_flash(int i)
 {
@@ -399,7 +443,7 @@ void Data::draw_time()
 
 void Data::draw_totalPE_vs_time()
 {
-    T_flash->Draw("time>>hPET(8000,-3200,4800)","total_PE*(total_PE>1)");
+    T_flash->Draw("time>>hPET(8000,-3200,4800)","total_PE*(total_PE>1)", "HIST");
     TH1F *h = (TH1F*)gDirectory->FindObject("hPET");
     h->SetTitle(TString::Format("Total PE per flash (%d flashes)", nFlash));
     h->GetXaxis()->SetTitle("#mus");
