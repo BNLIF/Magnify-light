@@ -200,14 +200,17 @@ void Data::load_flash_tree()
     // sort time
     // gROOT->SetBatch(kFALSE);
     // TCanvas c1;
-    T_flash->Draw("time:Entry$","","goff");
+    int nEntries = T_flash->Draw("time:Entry$","","goff");
+    if(nEntries != nFlash) {
+        cout << "warning: entry not matching! " << nEntries << " vs. " << nFlash << endl;
+    }
     double* v1 = T_flash->GetV1();
     double* v2 = T_flash->GetV2();
-    for (int i=0; i<nFlash; i++) {
+    for (int i=0; i<nEntries; i++) {
         list_time_entry.push_back(make_pair(v1[i], v2[i]));
     }
     sort(list_time_entry.begin(), list_time_entry.end());
-    cout << list_time_entry[0].first << " " << list_time_entry[0].second << endl;
+    // cout << list_time_entry[0].first << " " << list_time_entry[0].second << endl;
     // vector_di::iterator it = lower_bound(list_time_entry.begin(), list_time_entry.end(), 0);
     // if (it != list_time_entry.end()) {
     //     cout << (*it).first << " " << (*it).second << endl;
