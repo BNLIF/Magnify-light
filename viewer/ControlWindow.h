@@ -16,7 +16,7 @@ public:
     TGNumberEntry *flashEntry;
     TGCheckButton *allFlashButton;
 
-    // TGNumberEntry *timeEntry;
+    TGNumberEntry *beamWfEntry;
 
     // TGNumberEntry *threshEntry[3];
     // TGNumberEntry *zAxisRangeEntry[2];
