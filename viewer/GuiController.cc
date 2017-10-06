@@ -102,13 +102,12 @@ void GuiController::FlashChanged()
     vw->can->cd(4);
     data->draw_flash();
     data->print_flash();
-    vw->can->GetPad(4)->Modified();
-    vw->can->GetPad(4)->Update();
+    UpdatePad(4);
 
     vw->can->cd(2);
     data->draw_time();
-    vw->can->GetPad(2)->Modified();
-    vw->can->GetPad(2)->Update();
+    UpdatePad(2);
+
 }
 
 void GuiController::UpdateShowAllFlashes()
@@ -130,8 +129,12 @@ void GuiController::UpdateShowAllFlashes()
         if (h) delete h;
     }
 
-    vw->can->GetPad(2)->Modified();
-    vw->can->GetPad(2)->Update();
+    UpdatePad(2);
+
+    vw->can->cd(3);
+    data->draw_totalPE_vs_time();
+    UpdatePad(3);
+
 }
 
 void GuiController::BeamWfChanged()
@@ -143,8 +146,8 @@ void GuiController::BeamWfChanged()
     data->draw_beam_wf();
     data->draw_beam_wf_l1(cw->beamL1WfButton->IsDown());
     data->draw_beam_wf_raw(cw->beamRawWfButton->IsDown());
-    vw->can->GetPad(3)->Modified();
-    vw->can->GetPad(3)->Update();
+    UpdatePad(3);
+
 }
 
 void GuiController::ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *selected)
@@ -201,3 +204,10 @@ TString GuiController::OpenDialog()
     return "";
 
 }
+
+void GuiController::UpdatePad(int i)
+{
+    vw->can->GetPad(i)->Modified();
+    vw->can->GetPad(i)->Update();
+}
+

@@ -28,6 +28,7 @@ public:
     void ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject *selected);
 
     TString OpenDialog();
+    void UpdatePad(int i);
 
     MainWindow *mw;
     ViewWindow *vw;
