@@ -15,6 +15,7 @@ public:
 
     TGNumberEntry *flashEntry;
     TGCheckButton *allFlashButton;
+    TGCheckButton *pmtIdButton;
 
     TGNumberEntry *beamWfEntry;
     TGCheckButton *beamRawWfButton;

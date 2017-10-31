@@ -10,6 +10,7 @@
 #include "TLine.h"
 #include "TBox.h"
 #include "TEntryList.h"
+#include "TLatex.h"
 #include "TPad.h"
 #include "TROOT.h"
 #include "TCanvas.h"
@@ -396,7 +397,27 @@ void Data::draw_pmts()
     for (int i=0; i<NPMT; i++) {
         TEllipse *el = new TEllipse(pmt_z[i], pmt_y[i], 10.);
         el->Draw();
+        // TLatex *text = new TLatex(pmt_z[i], pmt_y[i], TString::Format("%i", i));
+        // text->Draw();
         // cout << i << " " << pmt_x[i] << " " << pmt_y[i] << " " << pmt_z[i] << " " << endl;
+    }
+}
+
+void Data::draw_pmt_ids(bool draw)
+{
+    if (draw) {
+        for (int i=0; i<NPMT; i++) {
+            TLatex *text = new TLatex(pmt_z[i], pmt_y[i], TString::Format("%i", i));
+            text->Draw();
+            list_of_texts.push_back(text);
+        }
+    }
+    else {
+        int size = list_of_texts.size();
+        for (int i=0; i<size; i++) {
+            list_of_texts[i]->Delete();
+        }
+        list_of_texts.clear();
     }
 }
 

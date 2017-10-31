@@ -82,6 +82,7 @@ void GuiController::InitConnections()
     cw->flashEntry->SetLimitValues(0, data->nFlash-1);
     cw->flashEntry->Connect("ValueSet(Long_t)", "GuiController", this, "FlashChanged()");
     cw->allFlashButton->Connect("Clicked()", "GuiController", this, "UpdateShowAllFlashes()");
+    cw->pmtIdButton->Connect("Clicked()", "GuiController", this, "UpdateShowPMTId()");
     cw->beamWfEntry->Connect("ValueSet(Long_t)", "GuiController", this, "BeamWfChanged()");
     cw->beamRawWfButton->Connect("Clicked()", "GuiController", this, "BeamWfChanged()");
     cw->beamL1WfButton->Connect("Clicked()", "GuiController", this, "BeamWfChanged()");
@@ -135,6 +136,19 @@ void GuiController::UpdateShowAllFlashes()
     data->draw_totalPE_vs_time();
     UpdatePad(3);
 
+}
+
+void GuiController::UpdateShowPMTId()
+{
+    vw->can->cd(4);
+    if (cw->pmtIdButton->IsDown()) {
+        // cout << "show PMT Id" << endl;
+        data->draw_pmt_ids(true);
+    }
+    else {
+        data->draw_pmt_ids(false);
+    }
+    UpdatePad(4);
 }
 
 void GuiController::BeamWfChanged()

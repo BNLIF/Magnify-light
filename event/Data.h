@@ -8,6 +8,7 @@ class TFile;
 class TEllipse;
 class TBox;
 class TClonesArray;
+class TLatex;
 
 #include <vector>
 
@@ -68,6 +69,7 @@ public:
     void draw_beam_wf_l1(bool draw);
     void draw_cosmic();
     void draw_pmts();
+    void draw_pmt_ids(bool draw);
     void draw_flash();
     void draw_time();
     void draw_totalPE_vs_time();
@@ -80,6 +82,7 @@ public:
 private:
     std::vector<TEllipse*> list_of_els;
     std::vector<TBox*> list_of_boxes;
+    std::vector<TLatex*> list_of_texts;
 
     void load_runinfo();
     void load_location();

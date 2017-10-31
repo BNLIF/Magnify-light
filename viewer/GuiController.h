@@ -22,6 +22,7 @@ public:
     void InitConnections();
     void FlashChanged();
     void UpdateShowAllFlashes();
+    void UpdateShowPMTId();
     void BeamWfChanged();
 
     void HandleMenu(int id);

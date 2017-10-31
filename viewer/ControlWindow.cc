@@ -50,6 +50,10 @@ ControlWindow::ControlWindow(const TGWindow *p, int w, int h)
     allFlashButton = new TGCheckButton(group_flashes, "all flashes  ");
     allFlashButton->SetState(kButtonUp);
     group_flashes->AddFrame(allFlashButton, new TGLayoutHints(kLHintsTop | kLHintsLeft,  1, 1, 1, 1));
+
+    pmtIdButton = new TGCheckButton(group_flashes, "show PMT#  ");
+    pmtIdButton->SetState(kButtonUp);
+    group_flashes->AddFrame(pmtIdButton, new TGLayoutHints(kLHintsTop | kLHintsLeft,  1, 1, 1, 1));
 }
 
 ControlWindow::~ControlWindow()
